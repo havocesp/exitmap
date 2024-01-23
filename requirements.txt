@@ -1,3 +1,4 @@
 dnspython
 stem
 pysocks
+security~=1.2.0
