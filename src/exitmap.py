@@ -26,7 +26,6 @@ import socket
 import pkgutil
 import argparse
 import datetime
-import random
 import logging
 from configparser import ConfigParser
 import functools
@@ -45,6 +44,7 @@ import relayselector
 
 from eventhandler import EventHandler
 from stats import Statistics
+import secrets
 
 log = logging.getLogger(__name__)
 
@@ -359,7 +359,7 @@ def run_module(module_name, args, controller, socks_port, stats):
     exit_destinations = select_exits(args, module)
 
     exit_relays = list(exit_destinations.keys())
-    random.shuffle(exit_relays)
+    secrets.SystemRandom().shuffle(exit_relays)
 
     count = len(exit_relays)
     stats.total_circuits += count
@@ -395,8 +395,8 @@ def sleep(delay, delay_noise):
 
     noise = 0
     if delay_noise != 0:
-        noise = random.random() * delay_noise
-        if random.randint(0, 1):
+        noise = secrets.SystemRandom().random() * delay_noise
+        if secrets.SystemRandom().randint(0, 1):
             noise = -noise
 
     delay += noise
@@ -433,7 +433,7 @@ def iter_exit_relays(exit_relays, controller, stats, args):
             except ValueError:
                 # Catch exception when exit is not in the cached_consensus
                 pass
-            first_hop = random.choice(all_hops)
+            first_hop = secrets.SystemRandom().choice(all_hops)
             log.debug("Using random first hop %s for circuit." % first_hop)
             hops = [first_hop, exit_relay]
 
