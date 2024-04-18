@@ -53,17 +53,16 @@ def test_dnssec(exit_fpr):
     try:
         ipv4 = sock.resolve(BROKEN_DOMAIN)
     except error.SOCKSv5Error as err:
-        log.debug("%s did not resolve broken domain because: %s.  Good." %
-                  (exit_url, err))
+        log.debug("%s did not resolve broken domain because: %s.  Good.", exit_url, err)
         return
     except socket.timeout as err:
-        log.debug("Socket over exit relay %s timed out: %s" % (exit_url, err))
+        log.debug("Socket over exit relay %s timed out: %s", exit_url, err)
         return
     except Exception as err:
-        log.debug("Could not resolve domain because: %s" % err)
+        log.debug("Could not resolve domain because: %s", err)
         return
 
-    log.critical("%s resolved domain to %s" % (exit_url, ipv4))
+    log.critical("%s resolved domain to %s", exit_url, ipv4)
 
 
 def probe(exit_desc, run_python_over_tor, run_cmd_over_tor, **kwargs):

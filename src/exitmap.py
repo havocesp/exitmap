@@ -55,7 +55,7 @@ def bootstrap_tor(args):
     """
 
     log.info("Attempting to invoke Tor process in directory \"%s\".  This "
-             "might take a while." % args.tor_dir)
+             "might take a while.", args.tor_dir)
 
     if not args.first_hop:
         log.info("No first hop given.  Using randomly determined first "
@@ -84,9 +84,9 @@ def bootstrap_tor(args):
             completion_percent=75,
             init_msg_handler=partial_parse_log_lines,
         )
-        log.info("Successfully started Tor process (PID=%d)." % proc.pid)
+        log.info("Successfully started Tor process (PID=%d).", proc.pid)
     except OSError as err:
-        log.error("Couldn't launch Tor: %s.  Maybe try again?" % err)
+        log.error("Couldn't launch Tor: %s.  Maybe try again?", err)
         sys.exit(1)
 
     return ports["socks"], ports["control"]
@@ -120,8 +120,7 @@ def parse_cmd_args():
         try:
             defaults = dict(config_parser.items("Defaults"))
         except ConfigParser.NoSectionError as err:
-            log.warning("Could not parse config file \"%s\": %s" %
-                        (config_file, err))
+            log.warning("Could not parse config file \"%s\": %s", config_file, err)
             defaults = {}
     else:
         defaults = {}
@@ -239,7 +238,7 @@ def main():
                         level=logging.__dict__[args.verbosity.upper()],
                         filename=args.logfile)
 
-    log.debug("Command line arguments: %s" % str(args))
+    log.debug("Command line arguments: %s", str(args))
 
     socks_port, control_port = bootstrap_tor(args)
     controller = Controller.from_port(port=control_port)
@@ -260,7 +259,7 @@ def main():
     if args.first_hop and (not util.relay_in_consensus(args.first_hop,
                                                        cached_consensus_path)):
         log.critical("Given first hop \"%s\" not found in consensus.  Is it"
-                     " offline?" % args.first_hop)
+                     " offline?", args.first_hop)
         return 1
 
     for module_name in args.module:
@@ -272,7 +271,7 @@ def main():
         try:
             run_module(module_name, args, controller, socks_port, stats)
         except error.ExitSelectionError as err:
-            log.error("Failed to run because : %s" % err)
+            log.error("Failed to run because : %s", err)
     return 0
 
 
@@ -330,8 +329,7 @@ def select_exits(args, module):
         requested_exits = requested_exits,
         destinations    = destinations)
 
-    log.debug("Successfully selected exit relays after %s." %
-              str(datetime.datetime.now() - before))
+    log.debug("Successfully selected exit relays after %s.", str(datetime.datetime.now() - before))
 
     return exit_destinations
 
@@ -341,13 +339,13 @@ def run_module(module_name, args, controller, socks_port, stats):
     Run an exitmap module over all available exit relays.
     """
 
-    log.info("Running module '%s'." % module_name)
+    log.info("Running module '%s'.", module_name)
     stats.modules_run += 1
 
     try:
         module = __import__("modules.%s" % module_name, fromlist=[module_name])
     except ImportError as err:
-        log.error("Failed to load module because: %s" % err)
+        log.error("Failed to load module because: %s", err)
         return
 
     # Let module perform one-off setup tasks.
@@ -375,10 +373,9 @@ def run_module(module_name, args, controller, socks_port, stats):
                                   EventType.CIRC, EventType.STREAM)
 
     duration = count * args.build_delay
-    log.info("Scan is estimated to take around %s." %
-             datetime.timedelta(seconds=duration))
+    log.info("Scan is estimated to take around %s.", datetime.timedelta(seconds=duration))
 
-    log.info("Beginning to trigger %d circuit creation(s)." % count)
+    log.info("Beginning to trigger %d circuit creation(s).", count)
 
     iter_exit_relays(exit_relays, controller, stats, args)
 
@@ -403,7 +400,7 @@ def sleep(delay, delay_noise):
     if delay < 0:
         delay = 0
 
-    log.debug("Sleeping for %.1fs, then building next circuit." % delay)
+    log.debug("Sleeping for %.1fs, then building next circuit.", delay)
     time.sleep(delay)
 
 
@@ -434,7 +431,7 @@ def iter_exit_relays(exit_relays, controller, stats, args):
                 # Catch exception when exit is not in the cached_consensus
                 pass
             first_hop = random.choice(all_hops)
-            log.debug("Using random first hop %s for circuit." % first_hop)
+            log.debug("Using random first hop %s for circuit.", first_hop)
             hops = [first_hop, exit_relay]
 
         assert len(hops) > 1
@@ -444,10 +441,9 @@ def iter_exit_relays(exit_relays, controller, stats, args):
         except stem.ControllerError as err:
             stats.failed_circuits += 1
             log.debug("Circuit with exit relay \"%s\" could not be "
-                      "created: %s" % (exit_relay, err))
+                      "created: %s", exit_relay, err)
 
         if i != (count - 1):
             sleep(args.build_delay, args.delay_noise)
 
-    log.info("Done triggering circuit creations after %s." %
-             str(datetime.datetime.now() - before))
+    log.info("Done triggering circuit creations after %s.", str(datetime.datetime.now() - before))

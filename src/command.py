@@ -132,7 +132,7 @@ class Command(object):
 
         with tempfile.NamedTemporaryFile(prefix="torsocks_") as fd:
 
-            log.debug("Created temporary torsocks config file %s" % fd.name)
+            log.debug("Created temporary torsocks config file %s", fd.name)
             os.environ["TORSOCKS_CONF_FILE"] = fd.name
             os.environ["TORSOCKS_LOG_LEVEL"] = "5"
 
@@ -140,8 +140,7 @@ class Command(object):
             fd.write("TorAddress 127.0.0.1\n")
             fd.flush()
 
-            log.debug("Invoking \"%s\" in environment:\n%s" %
-                      (" ".join(command), pprint.pformat(dict(os.environ))))
+            log.debug("Invoking \"%s\" in environment:\n%s", " ".join(command), pprint.pformat(dict(os.environ)))
 
             thread = threading.Thread(target=self.invoke_process,
                                       args=(command,))
@@ -152,7 +151,7 @@ class Command(object):
         # Attempt to kill the process if it did not finish in time.
 
         if thread.is_alive():
-            log.debug("Killing process after %d seconds." % timeout)
+            log.debug("Killing process after %d seconds.", timeout)
             self.process.kill()
             thread.join()
 

@@ -44,27 +44,26 @@ def fetch_page(exit_desc):
 
     exit_url = exiturl(exit_desc.fingerprint)
 
-    log.debug("Probing exit relay %s." % exit_url)
+    log.debug("Probing exit relay %s.", exit_url)
 
     data = None
     try:
         data = urllib.request.urlopen("https://people.torproject.org/~phw/check_file",
                                timeout=10).read().decode("utf-8")
     except Exception as err:
-        log.warning("urllib.request.urlopen for %s says: %s." %
-                    (exit_desc.fingerprint, err))
+        log.warning("urllib.request.urlopen for %s says: %s.", exit_desc.fingerprint, err)
         return
 
     if not data:
-        log.warning("Exit relay %s did not return data." % exit_url)
+        log.warning("Exit relay %s did not return data.", exit_url)
         return
 
     data = data.strip()
 
     if not re.match(expected, data):
-        log.warning("Got unexpected response from %s: %s." % (exit_url, data))
+        log.warning("Got unexpected response from %s: %s.", exit_url, data)
     else:
-        log.debug("Exit relay %s worked fine." % exit_url)
+        log.debug("Exit relay %s worked fine.", exit_url)
 
 
 def probe(exit_desc, run_python_over_tor, run_cmd_over_tor, **kwargs):

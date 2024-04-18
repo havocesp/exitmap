@@ -99,8 +99,7 @@ def get_exit_policies(cached_descriptors_path):
         return have_exit_policy
 
     except IOError as err:
-        log.critical("File \"%s\" could not be read: %s" %
-                     (cached_descriptors_path, err))
+        log.critical("File \"%s\" could not be read: %s", cached_descriptors_path, err)
         sys.exit(1)
 
 
@@ -113,8 +112,7 @@ def get_cached_consensus(cached_consensus_path):
         return cached_consensus
 
     except IOError as err:
-        log.critical("File \"%s\" could not be read: %s" %
-                     (cached_consensus_path, err))
+        log.critical("File \"%s\" could not be read: %s", cached_consensus_path, err)
         sys.exit(1)
 
 
@@ -232,7 +230,7 @@ def get_exits(data_dir,
         try:
             relay_fprs = frozenset(util.get_relays_in_country(country_code))
         except Exception as err:
-            log.warning("get_relays_in_country() failed: %s" % err)
+            log.warning("get_relays_in_country() failed: %s", err)
             relay_fprs = []
 
         exit_candidates = [
@@ -270,8 +268,7 @@ def get_exits(data_dir,
             if ok_dests:
                 exit_destinations[desc.fingerprint] = ok_dests
 
-    log.info("%d out of %d exit relays meet all filter conditions."
-             % (len(exit_destinations), len(have_exit_policy)))
+    log.info("%d out of %d exit relays meet all filter conditions.", len(exit_destinations), len(have_exit_policy))
     return exit_destinations
 
 

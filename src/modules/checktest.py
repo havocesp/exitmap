@@ -52,7 +52,7 @@ def fetch_page(exit_desc):
         data = urllib.request.urlopen("https://check.torproject.org/api/ip",
                                timeout=10).read()
     except Exception as err:
-        log.debug("urllib.request.urlopen says: %s" % err)
+        log.debug("urllib.request.urlopen says: %s", err)
         return
 
     if not data:
@@ -61,15 +61,15 @@ def fetch_page(exit_desc):
     try:
         check_answer = json.loads(data)
     except ValueError as err:
-        log.warning("Couldn't parse JSON over relay %s: %s" % (url, data))
+        log.warning("Couldn't parse JSON over relay %s: %s", url, data)
         return
 
     check_addr = check_answer["IP"].strip()
     if not check_answer["IsTor"]:
         log.error("Check thinks %s isn't Tor.  Desc addr is %s and check "
-                  "addr is %s." % (url, exit_desc.address, check_addr))
+                  "addr is %s.", url, exit_desc.address, check_addr)
     else:
-        log.debug("Exit relay %s passed the check test." % url)
+        log.debug("Exit relay %s passed the check test.", url)
 
 
 def probe(exit_desc, run_python_over_tor, run_cmd_over_tor, **kwargs):

@@ -53,7 +53,7 @@ class Statistics(object):
 
         if circ_event.status in [CircStatus.FAILED]:
 
-            log.debug("Circuit failed because: %s" % str(circ_event.reason))
+            log.debug("Circuit failed because: %s", str(circ_event.reason))
             self.failed_circuits += 1
 
         elif circ_event.status in [CircStatus.BUILT]:
@@ -74,8 +74,7 @@ class Statistics(object):
         percent_done = (self.successful_circuits /
                         float(self.total_circuits)) * 100
 
-        log.info("Probed %d out of %d exit relays, so we are %.2f%% done." %
-                 (self.successful_circuits, self.total_circuits, percent_done))
+        log.info("Probed %d out of %d exit relays, so we are %.2f%% done.", self.successful_circuits, self.total_circuits, percent_done)
 
     def __str__(self):
         """

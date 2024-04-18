@@ -83,7 +83,7 @@ def setup():
 
     for url, _ in check_files.items():
 
-        log.debug("Attempting to download <%s>." % url)
+        log.debug("Attempting to download <%s>.", url)
 
         request = urllib.request.Request(url)
         request.add_header('User-Agent', test_agent)
@@ -91,7 +91,7 @@ def setup():
         try:
             data = urllib.request.urlopen(request).read()
         except Exception as err:
-            log.warning("urlopen() failed: %s" % err)
+            log.warning("urlopen() failed: %s", err)
 
         file_name = url.split("/")[-1]
         _, tmp_file = tempfile.mkstemp(prefix="exitmap_%s_" % file_name)
@@ -99,7 +99,7 @@ def setup():
         with open(tmp_file, "wb") as fd:
             fd.write(data)
 
-        log.debug("Wrote file to \"%s\"." % tmp_file)
+        log.debug("Wrote file to \"%s\".", tmp_file)
 
         check_files[url] = [tmp_file, sha512_file(tmp_file)]
 
@@ -114,7 +114,7 @@ def teardown():
     for _, file_info in check_files.items():
 
         orig_file, _ = file_info
-        log.info("Removing file \"%s\"." % orig_file)
+        log.info("Removing file \"%s\".", orig_file)
         os.remove(orig_file)
 
 
@@ -165,7 +165,7 @@ def run_check(exit_desc):
 
         orig_file, orig_digest = file_info
 
-        log.debug("Attempting to download <%s> over %s." % (url, exiturl))
+        log.debug("Attempting to download <%s> over %s.", url, exiturl)
 
         data = None
 
@@ -175,11 +175,11 @@ def run_check(exit_desc):
         try:
             data = urllib.request.urlopen(request, timeout=20).read()
         except Exception as err:
-            log.warning("urlopen() failed for %s: %s" % (exiturl, err))
+            log.warning("urlopen() failed for %s: %s", exiturl, err)
             continue
 
         if not data:
-            log.warning("No data received from <%s> over %s." % (url, exiturl))
+            log.warning("No data received from <%s> over %s.", url, exiturl)
             continue
 
         file_name = url.split("/")[-1]
@@ -195,12 +195,10 @@ def run_check(exit_desc):
            (not files_identical(tmp_file, orig_file)):
 
             log.critical("File \"%s\" differs from reference file \"%s\".  "
-                         "Downloaded over exit relay %s." %
-                         (tmp_file, orig_file, exiturl))
+                         "Downloaded over exit relay %s.", tmp_file, orig_file, exiturl)
 
         else:
-            log.debug("File \"%s\" fetched over %s as expected." %
-                      (tmp_file, exiturl))
+            log.debug("File \"%s\" fetched over %s as expected.", tmp_file, exiturl)
 
             os.remove(tmp_file)
 

@@ -53,10 +53,10 @@ def setup():
     for domain in list(domains.keys()):
         response = dns.resolver.query(domain)
         for record in response:
-            log.debug("Domain %s maps to %s." % (domain, record.address))
+            log.debug("Domain %s maps to %s.", domain, record.address)
             domains[domain].append(record.address)
 
-    log.info("Domain whitelist: %s" % str(domains))
+    log.info("Domain whitelist: %s", str(domains))
 
 
 def resolve(exit_desc, domain, whitelist):
@@ -76,21 +76,20 @@ def resolve(exit_desc, domain, whitelist):
         ipv4 = sock.resolve(domain)
     except error.SOCKSv5Error as err:
         log.debug("Exit relay %s could not resolve IPv4 address for "
-                  "\"%s\" because: %s" % (exit, domain, err))
+                  "\"%s\" because: %s", exit, domain, err)
         return
     except socket.timeout as err:
-        log.debug("Socket over exit relay %s timed out: %s" % (exit, err))
+        log.debug("Socket over exit relay %s timed out: %s", exit, err)
         return
     except EOFError as err:
-        log.debug("EOF error: %s" % err)
+        log.debug("EOF error: %s", err)
         return
 
     if ipv4 not in whitelist:
         log.critical("Exit relay %s returned unexpected IPv4 address %s "
-                     "for domain %s" % (exit, ipv4, domain))
+                     "for domain %s", exit, ipv4, domain)
     else:
-        log.debug("IPv4 address of domain %s as expected for %s." %
-                  (domain, exit))
+        log.debug("IPv4 address of domain %s as expected for %s.", domain, exit)
 
 
 def probe(exit_desc, run_python_over_tor, run_cmd_over_tor, **kwargs):
