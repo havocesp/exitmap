@@ -67,12 +67,13 @@ def parse_cmd_args():
     return parser.parse_args()
 
 
-def get_fingerprints(cached_consensus_path, exclude=[]):
+def get_fingerprints(cached_consensus_path, exclude=None):
     """
     Get all relay fingerprints in the provided consensus.
 
     Relay fingerprints which are present in the list `exclude' are ignored.
     """
+    exclude = [] if exclude is None else exclude
 
     fingerprints = []
 
