@@ -30,6 +30,7 @@ import logging
 import util
 import torsocks
 import error
+from security import safe_command
 
 log = logging.getLogger(__name__)
 
@@ -82,8 +83,7 @@ class Command(object):
         # Start process and redirect its stderr to stdout.  That makes it more
         # convenient for us to parse the output.
 
-        self.process = subprocess.Popen(
-            command,
+        self.process = safe_command.run(subprocess.Popen, command,
             env=os.environ,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
