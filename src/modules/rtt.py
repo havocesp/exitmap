@@ -39,9 +39,9 @@ import os
 import logging
 import csv
 import errno
-import random
 import socket
 import util
+import secrets
 
 # We don't _need_ the top-level exitmap module, but this is the most
 # reliable way to figure out whether we need to add the directory with
@@ -242,7 +242,7 @@ def choose_probe_order(dests):
     deadcycles = 0
     while remaining:
         ks = list(remaining.keys())
-        x = random.choice(ks)
+        x = secrets.choice(ks)
         last = last_appearance[x]
         if last == -1 or (len(rv) - last) >= (len(ks) // 4):
             last_appearance[x] = len(rv)
